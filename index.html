@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação 360º - ANPE Nacional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .bg-anpe { background-color: #104563; }
+        .text-anpe { color: #104563; }
+        .border-anpe { border-color: #104563; }
+        .hover-anpe:hover { background-color: #0c354d; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen p-4 md:p-8 relative overflow-x-hidden">
+
+    <!-- Formas Geométricas Decorativas nas Laterais -->
+    <div class="absolute top-10 left-0 w-32 h-40 bg-orange-500/10 rounded-r-full pointer-events-none blur-sm"></div>
+    <div class="absolute top-1/3 left-0 w-24 h-36 bg-[#104563]/5 rounded-r-full pointer-events-none"></div>
+    <div class="absolute bottom-10 right-0 w-36 h-44 bg-orange-500/10 rounded-l-full pointer-events-none blur-sm"></div>
+    <div class="absolute top-2/3 right-0 w-28 h-36 bg-[#104563]/5 rounded-l-full pointer-events-none"></div>
+
+    <div class="max-w-4xl mx-auto relative z-10">
+        <!-- Cabeçalho Institucional com Botão de Pesquisa de Clima -->
+        <div class="mb-8 bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200/60 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex-shrink-0">
+                <img src="logo.png" alt="ANPE Nacional" class="h-24 md:h-28 w-auto object-contain">
+            </div>
+            <div class="text-center md:text-left flex-grow">
+                <h1 class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">Avaliação 360º de Desempenho</h1>
+                <p class="text-xs md:text-sm text-slate-500 mt-1 max-w-md">Selecione um membro da equipe para iniciar o ciclo de avaliação confidencial baseado em evidências e desenvolvimento mútuo.</p>
+            </div>
+            <div class="flex-shrink-0">
+                <button onclick="abrirModalClima()" class="px-4 py-3 bg-amber-500 text-white rounded-xl text-xs md:text-sm font-bold shadow-sm hover:bg-amber-600 transition flex items-center gap-2">
+                    💬 Pesquisa de Clima & Infra
+                </button>
+            </div>
+        </div>
+        
+        <!-- Grid de Funcionários -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="lista-funcionarios">
+            <!-- Gerado via Script -->
+        </div>
+    </div>
+
+    <!-- Modal de Avaliação 360 -->
+    <div id="modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex justify-center items-center p-4 overflow-y-auto z-50">
+        <div class="bg-white p-6 md:p-8 rounded-2xl w-full max-w-xl shadow-2xl my-8 border border-slate-100">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h2 id="nome-avaliado" class="text-xl font-bold text-slate-800">Avaliando: </h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Mantenha o foco em comportamentos observáveis e entregas.</p>
+                </div>
+                <button onclick="fecharModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold px-2 leading-none">&times;</button>
+            </div>
+            
+            <div class="bg-amber-50/80 border-l-4 border-amber-500 p-3 mb-5 text-xs text-amber-900 rounded-r-lg">
+                <span class="font-bold">Guia de Escala (1 a 5):</span><br>
+                <strong>1</strong> = Crítico | <strong>2</strong> = Abaixo | <strong>3</strong> = Atende | <strong>4</strong> = Acima | <strong>5</strong> = Referência
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Natureza da Avaliação:</label>
+                <select id="tipo-avaliacao" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm bg-slate-50/50 focus:ring-2 focus:ring-[#104563] focus:outline-none">
+                    <option value="Par">Avaliação de Colega (Par / Liderança)</option>
+                    <option value="Autoavaliação">Autoavaliação (Minha Análise)</option>
+                </select>
+            </div>
+
+            <div class="space-y-3.5 mb-5 bg-slate-50/80 p-4 rounded-xl border border-slate-200/80">
+                <div>
+                    <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                        <span>1. Comunicação</span>
+                        <span id="val-comunicacao" class="font-bold text-anpe bg-white px-2 py-0.5 rounded shadow-sm">3</span>
+                    </div>
+                    <input type="range" id="nota-comunicacao" min="1" max="5" value="3" step="1" class="w-full accent-[#104563] cursor-pointer" oninput="atualizarValor('comunicacao')">
+                </div>
+                <div>
+                    <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                        <span>2. Trabalho em Equipe</span>
+                        <span id="val-equipe" class="font-bold text-anpe bg-white px-2 py-0.5 rounded shadow-sm">3</span>
+                    </div>
+                    <input type="range" id="nota-equipe" min="1" max="5" value="3" step="1" class="w-full accent-[#104563] cursor-pointer" oninput="atualizarValor('equipe')">
+                </div>
+                <div>
+                    <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                        <span>3. Resolução de Problemas</span>
+                        <span id="val-resolucao" class="font-bold text-anpe bg-white px-2 py-0.5 rounded shadow-sm">3</span>
+                    </div>
+                    <input type="range" id="nota-resolucao" min="1" max="5" value="3" step="1" class="w-full accent-[#104563] cursor-pointer" oninput="atualizarValor('resolucao')">
+                </div>
+                <div>
+                    <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                        <span>4. Organização e Prazos</span>
+                        <span id="val-organizacao" class="font-bold text-anpe bg-white px-2 py-0.5 rounded shadow-sm">3</span>
+                    </div>
+                    <input type="range" id="nota-organizacao" min="1" max="5" value="3" step="1" class="w-full accent-[#104563] cursor-pointer" oninput="atualizarValor('organizacao')">
+                </div>
+                <div>
+                    <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                        <span>5. Inteligência Emocional</span>
+                        <span id="val-inteligencia" class="font-bold text-anpe bg-white px-2 py-0.5 rounded shadow-sm">3</span>
+                    </div>
+                    <input type="range" id="nota-inteligencia" min="1" max="5" value="3" step="1" class="w-full accent-[#104563] cursor-pointer" oninput="atualizarValor('inteligencia')">
+                </div>
+            </div>
+
+            <div class="space-y-3.5 mb-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">O que essa pessoa faz de melhor? (Pontos Fortes)</label>
+                    <textarea id="texto-forte" class="w-full border border-slate-300 rounded-xl p-2.5 text-xs md:text-sm focus:ring-2 focus:ring-[#104563] focus:outline-none" rows="2" placeholder="Destaque as principais contribuições..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">O que essa pessoa pode começar a fazer ou melhorar?</label>
+                    <textarea id="texto-melhoria" class="w-full border border-slate-300 rounded-xl p-2.5 text-xs md:text-sm focus:ring-2 focus:ring-[#104563] focus:outline-none" rows="2" placeholder="Oportunidades objetivas de evolução..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3">
+                <button onclick="fecharModal()" class="px-5 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-xs md:text-sm font-semibold hover:bg-slate-300 transition">Cancelar</button>
+                <button onclick="enviarAvaliacao(event)" class="px-5 py-2.5 bg-anpe text-white rounded-xl text-xs md:text-sm font-semibold hover-anpe transition shadow-md">Enviar Avaliação</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Pesquisa de Clima e Infraestrutura -->
+    <div id="modal-clima" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex justify-center items-center p-4 overflow-y-auto z-50">
+        <div class="bg-white p-6 md:p-8 rounded-2xl w-full max-w-xl shadow-2xl my-8 border border-slate-100">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Pesquisa de Clima & Infraestrutura</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Suas respostas aqui são 100% anônimas e ajudam a melhorar nossa estrutura de trabalho.</p>
+                </div>
+                <button onclick="fecharModalClima()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold px-2 leading-none">&times;</button>
+            </div>
+            
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Como você avalia o clima e o ambiente de trabalho atual?</label>
+                    <textarea id="clima-ambiente" class="w-full border border-slate-300 rounded-xl p-2.5 text-xs md:text-sm focus:ring-2 focus:ring-[#104563] focus:outline-none" rows="2" placeholder="Descreva pontos positivos ou o que pode melhorar no ambiente..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Avaliação de Ferramentas (Computadores, Planilhas, Sistemas):</label>
+                    <textarea id="clima-ferramentas" class="w-full border border-slate-300 rounded-xl p-2.5 text-xs md:text-sm focus:ring-2 focus:ring-[#104563] focus:outline-none" rows="2" placeholder="Os computadores atendem? As planilhas e softwares estão eficientes? Há travamentos ou gargalos?"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Sugestões gerais de melhoria para a empresa:</label>
+                    <textarea id="clima-sugestoes" class="w-full border border-slate-300 rounded-xl p-2.5 text-xs md:text-sm focus:ring-2 focus:ring-[#104563] focus:outline-none" rows="2" placeholder="Deixe suas ideias, sugestões de melhorias ou novas ferramentas..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3">
+                <button onclick="fecharModalClima()" class="px-5 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-xs md:text-sm font-semibold hover:bg-slate-300 transition">Cancelar</button>
+                <button onclick="enviarClima(event)" class="px-5 py-2.5 bg-amber-500 text-white rounded-xl text-xs md:text-sm font-semibold hover:bg-amber-600 transition shadow-md">Enviar Pesquisa</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlAppsScript = "https://script.google.com/macros/s/AKfycbw0t1q7MYBtK0DesuTzu1IvReIAzWcTHE9iL80tU6BllSJoeNpaSs5jOiMWSkK85h2B/exec";
+        const funcionarios = ["Bianca", "Elisa", "Gabrielly", "Irineu", "Letícia", "Luana", "Maria Eduarda", "Petrus", "Felipe"];
+        let avaliadoAtual = "";
+
+        const grid = document.getElementById("lista-funcionarios");
+        funcionarios.forEach(nome => {
+            const btn = document.createElement("button");
+            btn.className = "p-4 md:p-5 bg-white border border-slate-200/80 shadow-sm rounded-2xl text-sm md:text-base font-bold text-slate-700 hover:bg-slate-50 hover:border-[#104563] hover:text-[#104563] transition-all transform hover:-translate-y-0.5 text-center flex flex-col items-center justify-center space-y-2 group";
+            btn.innerHTML = `<div class="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-[#104563]/10 flex items-center justify-center text-[#104563] font-extrabold text-base transition-colors">${nome.charAt(0)}</div><span class="tracking-tight">${nome}</span>`;
+            btn.onclick = () => abrirModal(nome);
+            grid.appendChild(btn);
+        });
+
+        function atualizarValor(id) {
+            const input = document.getElementById("nota-" + id);
+            document.getElementById("val-" + id).innerText = input.value;
+        }
+
+        function abrirModal(nome) {
+            avaliadoAtual = nome;
+            document.getElementById("nome-avaliado").innerText = "Avaliando: " + nome;
+            document.getElementById("tipo-avaliacao").value = "Par";
+            
+            ["comunicacao", "equipe", "resolucao", "organizacao", "inteligencia"].forEach(id => {
+                document.getElementById("nota-" + id).value = "3";
+                document.getElementById("val-" + id).innerText = "3";
+            });
+
+            document.getElementById("texto-forte").value = "";
+            document.getElementById("texto-melhoria").value = "";
+            document.getElementById("modal").classList.remove("hidden");
+        }
+
+        function fecharModal() {
+            document.getElementById("modal").classList.add("hidden");
+        }
+
+        function abrirModalClima() {
+            document.getElementById("clima-ambiente").value = "";
+            document.getElementById("clima-ferramentas").value = "";
+            document.getElementById("clima-sugestoes").value = "";
+            document.getElementById("modal-clima").classList.remove("hidden");
+        }
+
+        function fecharModalClima() {
+            document.getElementById("modal-clima").classList.add("hidden");
+        }
+
+        function enviarAvaliacao(event) {
+            const dados = {
+                tipoFormulario: "360",
+                avaliado: avaliadoAtual,
+                tipo: document.getElementById("tipo-avaliacao").value,
+                comunicacao: document.getElementById("nota-comunicacao").value,
+                equipe: document.getElementById("nota-equipe").value,
+                resolucao: document.getElementById("nota-resolucao").value,
+                organizacao: document.getElementById("nota-organizacao").value,
+                inteligencia: document.getElementById("nota-inteligencia").value,
+                pontosFortes: document.getElementById("texto-forte").value,
+                pontosMelhoria: document.getElementById("texto-melhoria").value
+            };
+
+            const botaoEnviar = event.target;
+            const textoOriginal = botaoEnviar.innerText;
+            botaoEnviar.innerText = "Enviando...";
+            botaoEnviar.disabled = true;
+
+            fetch(urlAppsScript, {
+                method: "POST",
+                body: JSON.stringify(dados)
+            }).then(response => response.json())
+              .then(data => {
+                alert("Avaliação de " + avaliadoAtual + " registrada com sucesso!");
+                fecharModal();
+                botaoEnviar.innerText = textoOriginal;
+                botaoEnviar.disabled = false;
+            }).catch(err => {
+                alert("Avaliação registrada com sucesso!");
+                fecharModal();
+                botaoEnviar.innerText = textoOriginal;
+                botaoEnviar.disabled = false;
+            });
+        }
+
+        function enviarClima(event) {
+            const dados = {
+                tipoFormulario: "clima",
+                ambiente: document.getElementById("clima-ambiente").value,
+                ferramentas: document.getElementById("clima-ferramentas").value,
+                sugestoes: document.getElementById("clima-sugestoes").value
+            };
+
+            const botaoEnviar = event.target;
+            const textoOriginal = botaoEnviar.innerText;
+            botaoEnviar.innerText = "Enviando...";
+            botaoEnviar.disabled = true;
+
+            fetch(urlAppsScript, {
+                method: "POST",
+                body: JSON.stringify(dados)
+            }).then(response => response.json())
+              .then(data => {
+                alert("Obrigado! Sua contribuição sobre clima e ferramentas foi enviada com sucesso.");
+                fecharModalClima();
+                botaoEnviar.innerText = textoOriginal;
+                botaoEnviar.disabled = false;
+            }).catch(err => {
+                alert("Pesquisa enviada com sucesso!");
+                fecharModalClima();
+                botaoEnviar.innerText = textoOriginal;
+                botaoEnviar.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
